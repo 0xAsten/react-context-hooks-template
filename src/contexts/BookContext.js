@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 export const BookContext = React.createContext()
 
 const BookContextProvider = (props) => {
-  const [books, setBooks] = useState([
-    { title: 'name of the wind', author: 'patrick rothfuss', id: 1 },
-    { title: 'the way of kings', author: 'brandon sanderson', id: 2 },
-    { title: 'the final empire', author: 'brandon sanderson', id: 3 },
-    { title: 'the hero of ages', author: 'brandon sanderson', id: 4 },
-  ])
+  const [books, setBooks] = useState(() => {
+    const books = localStorage.getItem('books')
+    return books ? JSON.parse(books) : []
+  })
+
+  useEffect(() => {
+    localStorage.setItem('books', JSON.stringify(books))
+  }, [books])
 
   const addBook = (title, author) => {
     setBooks([...books, { title, author, id: books.length + 1 }])
